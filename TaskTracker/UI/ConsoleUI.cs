@@ -44,6 +44,7 @@ namespace TaskTracker.UI
                         "Удалить задачу",
                         "Статистика",
                         "Изменить приоритет задачи",
+                        "Фильтр по приоритету",
                         "Сохранить и выйти"
                     );
                 }
@@ -73,6 +74,9 @@ namespace TaskTracker.UI
                         SetTaskPriority();
                         break;
                     case 7:
+                        ShowTasksByPriority();
+                        break;
+                    case 8:
                         storage.SaveTasks(taskService.GetAllTasks());
                         running = false;
                         Console.WriteLine("Задачи сохранены. До свидания!");
@@ -91,7 +95,8 @@ namespace TaskTracker.UI
             Console.WriteLine("4. Удалить задачу");
             Console.WriteLine("5. Статистика");
             Console.WriteLine("6. Изменить приоритет задачи");
-            Console.WriteLine("7. Сохранить и выйти");
+            Console.WriteLine("7. Фильтр по приоритету");
+            Console.WriteLine("8. Сохранить и выйти");
             Console.Write("Выберите действие: ");
 
             string input = Console.ReadLine();
@@ -285,6 +290,35 @@ namespace TaskTracker.UI
                 {
                     Console.WriteLine("Неверный выбор.");
                 }
+            }
+
+            if (useArrowMenu)
+            {
+                Console.WriteLine("\nНажмите любую клавишу для продолжения...");
+                Console.ReadKey();
+            }
+        }
+
+        private void ShowTasksByPriority()
+        {
+            Console.WriteLine();
+            TaskPriority priority;
+            if (TryReadPriority(out priority))
+            {
+                List<TaskItem> tasks = taskService.GetTasksByPriority(priority);
+                if (tasks.Count == 0)
+                {
+                    Console.WriteLine("Нет задач с таким приоритетом.");
+                }
+
+                for (int i = 0; i < tasks.Count; i++)
+                {
+                    Console.WriteLine(tasks[i]);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Неверный выбор.");
             }
 
             if (useArrowMenu)
